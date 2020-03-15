@@ -1,4 +1,4 @@
-# Book of R!
+# The Book of R! A First Course in Programming and Statistics
 Worked through chapters and exercises complimenting the Book of R!, by Tilman M. Davies. 
 
 ## Buy the book on Amazon
