@@ -1,4 +1,4 @@
-# BookofR
+# Book of R!
 Worked through chapters and exercises complimenting the Book of R!, by Tilman M. Davies. 
 
 ## Buy the book on Amazon
