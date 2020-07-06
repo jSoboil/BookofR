@@ -237,13 +237,63 @@ text(0, 1, labels = expression(paste(Gamma, "(", tau, ") = 24 when ", tau, " = 5
 title(main = expression(paste("Gr", epsilon, epsilon, "k")), cex.main = 2)
 
 # Mathematical Expression -------------------------------------------------
+# Mathematical expressions can be a bit more complicated and is comparative to languages like
+# LaTeX. However, here are some examples:
+expr_1 <- expression(c^2 == a[1]^2 + b[1]^2)
+expr_2 <- expression(paste(pi^{x[i]}, (1 - pi)^(n - x[i])))
+expr_3 <- expression(paste("Sample mean: ",
+                           italic(n)^{-1},
+                           sum(italic(x)[italic(i)],
+                               italic(i) == 1,
+                               italic(n))
+                           == frac(italic(x)[1]) + ... + italic(x)[italic(n)],
+                           italic(n)))
+expr_4 <- expression(paste("f(x", "|", alpha, ", ", beta,
+                           ")" == frac(x^{alpha - 1} ~ (1 - x)^{beta - 1},
+                                       B(alpha, beta))))
+par(mar = c(3, 3, 3, 3))
+plot(1, 1, type = "n", xlim = c(-1, 1), ylim = c(.5, 4.5), xaxt = "n", yaxt = "n",
+     ann = FALSE)
+text(0, 4:1, labels = c(expr_1, expr_2, expr_3, expr_4, cex = 1.5))
+title(main = "Math", cex.main = 2)
 
+# Note: all Greek and mathematical markup is contained within a call to expression. It is 
+# necessary to use paste if you require separate components (separated by commas), some of 
+# which may or may not be regular text, i.e. in quotes, to produce the final result.
 
+# ===========================================================================================
+# A Fully Annotated Scatterplot -------------------------------------------
+# ===========================================================================================
+hp <- mtcars$hp
+mpg <- mtcars$mpg
+wtcex <- mtcars$wt / mean(mtcars$wt)
+hp_seq_2 <- seq(50, 525, by = 25)
 
+dev.new()
+par(mar = c(5, 4, 4, 4))
+plot(hp, mpg, cex = wtcex, axes = FALSE, ann = FALSE)
+box(bty = "u")
+axis(2, las = 1, tcl = -.8, family = "mono")
+axis(1, at = hp_seq_2, labels = FALSE, tcl = -1)
 
+L100 <- seq(22, 7, by = -3)
+L100
 
+MPG.L100 <- (100 / L100 * 3.78541) / 1.609
+MPG.L100
 
+axis(4, at = MPG.L100, labels = L100, las = 1, tcl = .3, mgp = c(3, .3, 0), family = "mono")
 
+express_L100 <- expression(paste(L/100, "km"%~~%frac(378.541, 1.609%*%MPG)))
+# Note %~~% provides an approximately equal to sign...
+title(main = "MPG by Horsepower", xlab = "Horsepower", ylab = "MPG",
+      family = "serif")
+mtext(express_L100, side = 4, line = 3, family = "serif")
+text(hp_seq_2, rep(7.5, length(hp_seq_2)), labels = hp_seq_2, srt = 45, xpd = TRUE, 
+     family = "mono")
+grid(col = "darkgrey")
+legend(250, 30, legend = rep("       ", 3), pch = rep(1, 3), pt.cex = c(1.5, 1, .5)) 
+arrows(265, 27, 265, 29, length = .05)
+text(locator(n = 1), labels = "Weight", cex = .8, family = "serif")
 
-
-
+# End file ----------------------------------------------------------------
