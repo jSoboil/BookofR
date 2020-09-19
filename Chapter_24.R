@@ -75,26 +75,62 @@ ggplot(data = air, aes(x = Temp, fill = Month)) +
 # ==========================================================================================
 # Multiple Plots and Variable-Mapped Facets -------------------------------
 # ==========================================================================================
+# A quick way to organise multiple plots in a single image is to use the gridExtra package.
+plot_1 <- ggplot(air, aes(x = 1:nrow(air), y = Temp)) +
+ geom_line(aes(col = Month)) +
+ geom_point(aes(col = Month, size = Wind)) +
+ geom_smooth(method = "loess", col = "black") +
+ labs(x = "Time (days)", y = "Temp (F)")
+plot_2 <- ggplot(air, aes(x = Solar.R, fill = Month)) +
+ geom_density(alpha = .4) +
+ labs(x = expression(paste("Solar radiation (", ring(A),")")),
+      y = "Kernel estimate")
+plot_3 <- ggplot(air, aes(x = Wind, y = Temp, colour = Month)) +
+ geom_point(aes(size = Ozone)) +
+ geom_smooth(method = "lm", level = .9, fullrange = FALSE, alpha = .2) +
+ labs(x = "Wind speed (MPH)", y = expression(paste("Temp (C", degree, ")")))
 
+gridExtra::grid.arrange(plot_1, plot_2, plot_3)
 
+# Facetsss Mapped to a Categorical Variable -------------------------------
+# Often, when exploring a data set, you'll want to create several plots of variables. This 
+# behaviour is referred to as faceting.
 
+plot_facet <- ggplot(data = air, aes(x = Temp, fill = Month)) +
+ geom_density(alpha = .4) +
+ ggtitle("Monthly temp probability densities") +
+ labs(x = "Temp (F)", y = "Kernal estimate")
 
+# Not ~ can be interpreted as saying 'by':
+plot_facet + facet_wrap(~ Month)
+plot_facet + facet_wrap(~ Month, scales = "free")
+plot_facet + facet_wrap(~ Month, nrow = 1)
 
+# Remember facetgird, which uses two variables etc.
 
+# ==========================================================================================
+# Interactive Tools in ggvis ----------------------------------------------
+# ==========================================================================================
+# The ggvis package allows you to design flexible statistical plots that the end user can 
+# interact with.
+library(ggvis)
 
+surv <- na.omit(survey[, c("Sex", "Wr.Hnd", "Height", "Smoke", "Exer")])
 
+surv %>% ggvis(x = ~Height) %>% 
+ layer_histograms(width = input_slider(1, 15, label = "Binwidth:"), fill:="gray")
+  
+# A more interesting visualisation:
+filler <- input_radiobuttons(c("Sex" = "Sex", "Smoking status" = "Smoke",
+                               "Exercise frequency" = "Exer"), map = as.name,
+                             label = "Colour points by...")
+sizer <- input_slider(10, 300, label = "Point size:")
+opacity <- input_slider(0.1, 1, label = "Opacity:")
+surv %>% 
+ ggvis(x = ~Wr.Hnd, y = ~Height, fill = filler,
+       size := sizer, opacity := opacity) %>% 
+ layer_points() %>% 
+ add_axis("x", title = "Handspan") %>% 
+ add_legend("fill", title = "")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# End file ----------------------------------------------------------------
